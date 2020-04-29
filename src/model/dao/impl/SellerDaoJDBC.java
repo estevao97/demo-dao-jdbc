@@ -24,6 +24,7 @@ public class SellerDaoJDBC implements SellerDao {
 		this.con = conn;
 	}
 
+	@SuppressWarnings("resource")
 	@Override
 	public void insert(Seller obj) {
 		PreparedStatement pt = null;
@@ -90,11 +91,33 @@ public class SellerDaoJDBC implements SellerDao {
 
 	}
 
+	@SuppressWarnings("resource")
 	@Override
 	public void deleteById(Integer obj) {
-		// TODO Auto-generated method stub
+
+		PreparedStatement pt = null;
+
+		try {
+	
+			pt = con.prepareStatement("DELETE FROM seller  WHERE Id = ?");
+			pt.setInt(1, obj);
+			pt.executeUpdate();
+			pt = con.prepareStatement("ALTER TABLE seller DROP Id");
+			pt.execute();
+			pt = con.prepareStatement("ALTER TABLE seller AUTO_INCREMENT = 1");
+			pt.execute();
+			pt = con.prepareStatement("ALTER TABLE seller ADD Id int UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST");
+			pt.execute();
+				
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			DB.closeStatement(pt);
+			
+		}
 
 	}
+
 
 	@Override
 	public Seller findById(Integer id) {
