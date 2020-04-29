@@ -28,10 +28,15 @@ public class Program {
 		for (Seller x : list) {
 			System.out.println(x);
 		}
-		Seller seller = new Seller(null, "Gustavo", "gustadsg@gmail.com", new Date(), 30000.00, dep);
-		System.out.println("########## TESTE 4 ######### >> insert");
-		sellerDao.insert(seller);
-		System.out.println("Inserted!\nNew Seller: " + seller.getId());
+		//Seller seller = new Seller(null, "Gustavo", "gustadsg@gmail.com", new Date(), 30000.00, dep);
+		//System.out.println("########## TESTE 4 ######### >> insert");
+		//sellerDao.insert(seller);
+		//System.out.println("Inserted!\nNew Seller: " + seller.getId());
+		System.out.println("########## TESTE 5 ######### >> update");
+		sl = sellerDao.findById(7);
+		sl.setName("Gugusta");
+		sellerDao.update(sl);
+		System.out.println("Update completed!");
 		
 
 	}

@@ -29,20 +29,28 @@ public class SellerDaoJDBC implements SellerDao {
 		PreparedStatement pt = null;
 
 		try {
+			pt = con.prepareStatement("ALTER TABLE seller DROP Id");
+			pt.execute();
+			pt = con.prepareStatement("ALTER TABLE seller AUTO_INCREMENT = 1");
+			pt.execute();
+			pt = con.prepareStatement("ALTER TABLE seller ADD Id int UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST");
+			pt.execute();
 			pt = con.prepareStatement("INSERT INTO seller (Name, Email, BirthDate, BaseSalary, DepartmentId)"
 					+ "  VALUES  (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
-
+			
 			pt.setString(1, obj.getName());
 			pt.setString(2, obj.getEmail());
 			pt.setDate(3, new java.sql.Date(obj.getBirthDate().getTime()));
 			pt.setDouble(4, obj.getBaseSalary());
 			pt.setInt(5, obj.getDepartment().getId());
+			
 			if (pt.executeUpdate() > 0) {
 				ResultSet rs = pt.getGeneratedKeys();
 				if (rs.next()) {
 					obj.setId(rs.getInt(1));
 				}
 				DB.closeResultSet(rs);
+				
 			} else {
 				throw new DbException("Unexpected error! No rows affected.");
 			}
@@ -50,14 +58,35 @@ public class SellerDaoJDBC implements SellerDao {
 		} catch (SQLException e) {
 			throw new DbException(e.getMessage());
 		} finally {
-			DB.closeStatement(pt);
+			DB.closeStatement(pt);	
 		}
-	
 	}
 
 	@Override
-	public void update(Seller obl) {
-		// TODO Auto-generated method stub
+	public void update(Seller obj) {
+		
+		PreparedStatement pt = null;
+
+		try {
+	
+			pt = con.prepareStatement("UPDATE seller"
+					+ " SET Name = ?, Email = ?, BirthDate = ?, BaseSalary = ?, DepartmentId = ?"
+					+ "  WHERE Id = ? ", Statement.RETURN_GENERATED_KEYS);
+
+			pt.setString(1, obj.getName());
+			pt.setString(2, obj.getEmail());
+			pt.setDate(3, new java.sql.Date(obj.getBirthDate().getTime()));
+			pt.setDouble(4, obj.getBaseSalary());
+			pt.setInt(5, obj.getDepartment().getId());
+			pt.setInt(6, obj.getId());
+			pt.executeUpdate();
+				
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			DB.closeStatement(pt);
+			
+		}
 
 	}
 
