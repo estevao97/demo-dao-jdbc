@@ -10,7 +10,7 @@ import model.dao.SellerDao;
 import model.entities.Department;
 import model.entities.Seller;
 
-public class Program {
+public class ProgramTesteSeller {
 
 	public static void main(String[] args) {
 
@@ -41,9 +41,9 @@ public class Program {
 		sl.setName("Alexia");
 		sellerDao.update(sl);
 		System.out.println("Update completed!");
+		System.out.println("########## TESTE 6 ######### >> deleteById");
 		System.out.println("Enter with Id for delete test");
 		int id = sc.nextInt();
-		System.out.println("########## TESTE 6 ######### >> deleteById");
 		sellerDao.deleteById(id);
 		System.out.println("Delete completed!");
 		
